@@ -1,0 +1,228 @@
+Namn: Wilhelm Berggren, Nils Lundell
+
+Task 1:
+
+Fråga 1:
+    Input: 
+        use citydb
+
+    Output: 
+        switched to db citydb
+
+Fråga 2:
+    Input: 
+        db.cities.insertMany([
+            {_id: 1, name: "Stockholm", population: 1372565},
+            {_id: 2, name: "Göteborg", population: 549839},
+            {_id: 3, name: "Malmö", population: 280415},
+            {_id: 4, name: "Uppsala", population: 140454},
+            {_id: 5, name: "Västerås", population: 110877}
+        ])
+
+    Output:
+        { "acknowledged" : true, "insertedIds" : [ 1, 2, 3, 4, 5 ] }
+
+Fråga 3:
+    Input:
+        db.cities.find({name: "Malmö"}, {_id: 0})
+    Output:
+        { "name" : "Malmö", "population" : 280415 }
+
+Fråga 4:
+    Input: 
+        db.cities.updateOne({"name":"Göteborg"}, {$set: {"population":549890}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+Fråga 5:
+    Input:
+        db.cities.deleteOne({_id: 4})
+    Output:
+        { "acknowledged" : true, "deletedCount" : 1 }
+
+Fråga 6:
+    Input:
+        db.cities.updateOne({"name":"Västerås"}, {$inc: {"population":2}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+Fråga 7:
+    Input:
+        db.cities.updateMany({}, {$set: {country: "Sweden"}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 4, "modifiedCount" : 4 }
+
+Fråga 8:
+    Input:
+        db.cities.updateMany({}, {$rename: {"country": "Country"}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 4, "modifiedCount" : 4 }
+
+Task 2:
+
+Fråga 1:
+    Input:
+        use animalsdb
+    Output:
+        switched to db animalsdb
+
+Fråga 2:
+    Input:
+        use animalsdb
+    Output:
+        switched to db animalsdb
+
+Fråga 3:
+    Svar: Den kör alla kommandon i filen. Kommandot i filen "db.animals.insert" skapar en collection "animals" om den inte finns och lägger i den ett stort objekt.
+    Input:
+        load("C:\\Users\\wilhe\\Downloads\\animals.js")
+    Output:
+        true
+
+Fråga 4:
+    Input:
+        db.animals.find()
+    Output:
+        { "_id" : ObjectId("5e2182c7d0bc2039cc241289"), "name" : "Elephant", "color" : "grey", "weight" : 7000, "has_tusks" : true, "data" : [ "mammal", "herbivore", "live in groups" ], "found_in" : [ "sub-Saharan Africa", "South Asia", "Southeast Asia" ] } 
+        (osv.)
+    
+Fråga 5:
+    Input:
+        db.animals.count()
+    Output:
+        16
+
+Fråga 6:
+    Input:
+        db.animals.updateOne({name: "Bear"}, {$set: {favorit_food: ["blueberry", "honey", "ants"]}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+Fråga 7:
+    Input:
+         db.animals.updateOne({name: "Bear"}, {$pull: {favorit_food: {$in: ["honey", "ants"]}, data: "rounded ears"}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+Fråga 8:
+    Input:
+       db.animals.count({color: "yellow"})
+    Output:
+        2
+
+Fråga 9:
+    Input: 
+        db.animals.find({found_in: "Asia", color: "brown"}, {_id: 0, name: 1, color: 1, found_in: 1}).pretty()
+    Output:
+    {
+        "name" : "Bear",
+        "color" : "brown",
+        "found_in" : [
+                "North America",
+                "South America",
+                "Europe",
+                "Asia"
+        ]
+    }
+
+Fråga 10:
+    Input:
+        db.animals.updateOne({name: "Fox"}, {$set: {litter_size: "4-6-kits"}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+Fråga 11:
+    Input: 
+        db.animals.updateMany({order: "Carnivora", color: "yellow"}, {$push: {data: "likes meat"}})
+    Output:
+        { "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+
+Fråga 12:
+    Input:
+        db.animals.aggregate([{$group: {_id: "$color", count: {$sum: 1}}}])
+    Output:
+        { "_id" : "black", "count" : 3 }
+        { "_id" : "orange", "count" : 2 }
+        { "_id" : "yellow", "count" : 2 }
+        { "_id" : "grey", "count" : 3 }
+        { "_id" : "brown", "count" : 5 }
+        { "_id" : "gray", "count" : 1 }
+
+Fråga 13:
+    Input:
+        db.animals.count({weight: {$gt: 100}})
+    Output:
+        6
+
+Fråga 14:
+    Input:
+        db.animals.find({order: "Carnivora"}).sort({weight: -1})
+    Output:
+        { "_id" : ObjectId("5e2182c7d0bc2039cc24128d"), "name" : "Bear", "color" : "brown", "weight" : 505, "found_in" : [ "North America", "South America", "Europe", "Asia" ], "class" : "Mammalia", "order" : "Carnivora", "suborder" : "Caniformia", "family" : "Ursidae", "data" : [ "mammal", "carnivore", "nonretractile claws", "can stand on its rear legs" ], "favorit_food" : [ "blueberry" ] } 
+        (osv.)
+
+Fråga 15:
+    Input 1:
+        db.animals.find({$or: [{data: "carnivore"}, {data: "mammal"}]})
+    Input 2:
+        db.animals.find({data: {$in: ["carnivore", "mammal"]}})
+    Output:
+        { "_id" : ObjectId("5e2182c7d0bc2039cc241289"), "name" : "Elephant", "color" : "grey", "weight" : 7000, "has_tusks" : true, "data" : [ "mammal", "herbivore", "live in groups" ], "found_in" : [ "sub-Saharan Africa", "South Asia", "Southeast Asia" ] }
+        (osv.)
+
+Fråga 16:
+    Input:
+         db.animals.find({$and: [{data: "carnivore"}, {data: "mammal"}]})
+    Output: 
+        { "_id" : ObjectId("5e2182c7d0bc2039cc24128c"), "name" : "Wolf", "class" : "Mammalia", "order" : "Carnivora", "suborder" : "Caniformia", "color" : "grey", "weight" : 44, "min_weight_male" : 43, "max_weight_male" : 45, "min_weight_female" : 36, "max_weight_female" : 38.5, "found_in" : [ "Eurasia", "North America" ], "data" : [ "mammal", "carnivore", "canid", "live in groups" ] } 
+        (osv.)
+
+Task 3:
+
+Fråga 1:
+    Input: 
+        db.orders.insertMany([KOPIERAD JSON])
+    Output:
+        {
+            "acknowledged" : true,
+            "insertedIds" : [
+                    ObjectId("5e219eb6d0bc2039cc241299"),
+                    ObjectId("5e219eb6d0bc2039cc24129a"),
+                    ObjectId("5e219eb6d0bc2039cc24129b"),
+                    ObjectId("5e219eb6d0bc2039cc24129c"),
+                    ObjectId("5e219eb6d0bc2039cc24129d")
+            ]
+        }
+
+Fråga 2:
+    Input:
+        db.orders.find({Note: null})
+    Output:
+        { "_id" : ObjectId("5e219eb6d0bc2039cc24129a"), "Id" : 101, "Name" : "Johan", "Subscriber" : true, "Payment" : { "Type" : "Debit-Card", "Total" : 500, "Success" : true }, "Note" : null }
+        { "_id" : ObjectId("5e219eb6d0bc2039cc24129b"), "Id" : 102, "Name" : "Matilda", "Subscriber" : true, "Payment" : { "Type" : "Credit-Card", "Total" : 700, "Success" : false } }
+
+Fråga 3:
+    Input:
+        db.orders.find({Note: {$exists: 0}})
+    Output:
+        { "_id" : ObjectId("5e219eb6d0bc2039cc24129b"), "Id" : 102, "Name" : "Matilda", "Subscriber" : true, "Payment" : { "Type" : "Credit-Card", "Total" : 700, "Success" : false } }
+
+Fråga 4:
+    Input:
+        db.orders.find({"Payment.Type": "Credit-Card"}).sort({"Payment.Total": 1})
+    Output:
+        { "_id" : ObjectId("5e219eb6d0bc2039cc241299"), "Id" : 100, "Name" : "Eva", "Subscriber" : true, "Payment" : { "Type" : "Credit-Card", "Total" : 400, "Success" : true }, "Note" : "1st Complete Record" }
+        { "_id" : ObjectId("5e219eb6d0bc2039cc24129b"), "Id" : 102, "Name" : "Matilda", "Subscriber" : true, "Payment" : { "Type" : "Credit-Card", "Total" : 700, "Success" : false } }
+
+Fråga 5:
+    Input:
+        db.orders.aggregate([{$sort: {"Payment.Total": 1}}, {$skip: 1}, {$limit: 2}])
+    Output:
+        { "_id" : ObjectId("5e219eb6d0bc2039cc24129d"), "Id" : 104, "Name" : "Rikard", "Subscriber" : false, "Payment" : { "Type" : "Debit-Card", "Total" : 300, "Success" : false }, "Note" : "Completed Payment" }
+        { "_id" : ObjectId("5e219eb6d0bc2039cc241299"), "Id" : 100, "Name" : "Eva", "Subscriber" : true, "Payment" : { "Type" : "Credit-Card", "Total" : 400, "Success" : true }, "Note" : "1st Complete Record" }
+
+Frågra 6:
+    Input:
+         db.orders.aggregate([{$group: {"_id": "$Payment.Success", count: { $sum: 1}}}])
+    Output:
+        { "_id" : true, "count" : 2 }
+        { "_id" : null, "count" : 1 }
+        { "_id" : false, "count" : 2 }
