@@ -39,7 +39,7 @@ namespace DatabasLabb3
 
         private static void InsertRestaurants(IMongoCollection<BsonDocument> restaurants)
         {
-            //Create array of class Restaurant
+            //Create array of BsonDocuments describing restaurants
             var restaurantList = new BsonDocument[] {
                 new BsonDocument {
                     { "name", "Sun Bakery Trattoria" },
@@ -68,14 +68,14 @@ namespace DatabasLabb3
                 }
             };
 
-            //Insert all Restaurants in collection
+            //Insert all restaurants in collection
             restaurants.InsertMany(restaurantList);
         }
 
         private static void PrintRestaurants(IMongoCollection<BsonDocument> restaurants)
         {
             Console.WriteLine("\nAll restaurants:\n");
-            //Find all Restaurants in database collection, and print their name
+            //Find all restaurants in database collection, and print their name
             foreach (var restaurant in restaurants.Find(new BsonDocument()).ToEnumerable())
             {
                 Console.WriteLine($"{restaurant.ToJson()}");
